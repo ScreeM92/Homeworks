@@ -19,6 +19,7 @@ contract Balance{
     
     event BuyEvent(address indexed from, uint amount);
     event WithdrawnEvent(address indexed to, uint amountWithdrawn);
+    event SendEvent(address indexed from, address indexed to, uint amounSend);
     
     modifier onlyOwner {
         require(owner == msg.sender);
@@ -87,17 +88,20 @@ contract Balance{
         require(fundSeller.amount >= amount);
         
         Funder storage fundTo = funders[to];
+        uint256 fundToAmount = fundTo.amount;
         if(fundTo.amount > 0) {
             fundTo.amount += amount;
         } 
         else {
             funders[to] = Funder({ addr: to, amount: amount, isHold: true });
         }
+        assert(fundToAmount == (fundTo.amount - amount));
         
-        funders[seller].amount -= amount;
-        if(fundSeller.amount == 0) {
-            funders[seller].isHold = false;
-        }
+        uint256 fundSellerAmount = fundSeller.amount;
+        fundSeller.amount -= amount;
+        assert(fundSellerAmount == (fundSeller.amount + amount));
+        
+        SendEvent(seller, to, amount);
     }
     
     function checkTokenCount() public view returns (uint) {
@@ -105,7 +109,12 @@ contract Balance{
         return fund.amount;
     }
     
+    function checkIsHolder(address addr) public view returns (bool) {
+        Funder storage fund = funders[addr];
+        return fund.isHold;
+    }
+    
     function getBalance() onlyOwner public view returns (uint) {
         return this.balance;
     }
-} 
+}
