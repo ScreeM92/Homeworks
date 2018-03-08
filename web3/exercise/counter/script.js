@@ -45,7 +45,7 @@ function onButtonPressed(){
 
 	contractInstance.count(input, {"from": acc}, function(err, res){
 		if(!err){
-			displayMessage("Successfully incremented value! The value is " + res[1].valueOf() + ' and it is for ' + res[0].valueOf() + ' times changed!');
+			displayMessage("Successfully incremented value!");
 		} else {
 			displayMessage("Something went wrong. Are you sure that you are the current owner?");
 		}
