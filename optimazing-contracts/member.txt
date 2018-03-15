@@ -1,0 +1,5 @@
+1. The contract initialized structures line-by-line, where they could be initialized on a single line for the same result.
+2. There is a contract "MemberContr" which is not needed to be contract.
+3. The contract "MemberContr" there is function "get" which is not needed
+4. The address array memberList have to be mapping because you need to check without foreach the whole array if the address already exist when add new one.
+5. For lower gas cost you have to make "MemberContr" from contract to library and then add struct to store the data.
